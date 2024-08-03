@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Attendance</h1>
+        <form id="student-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="roll">Roll Number:</label>
+            <input type="text" id="roll" name="roll" required>
+            <label for="student-id">Student ID:</label>
+            <input type="text" id="student-id" name="student-id" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('student-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+            
+            // Get query parameters
+            const params = new URLSearchParams(window.location.search);
+            const data = JSON.parse(decodeURIComponent(params.get('data')));
+            console.log('Query Data:', data); // Debugging log
+
+            // Collect form data
+            const name = document.getElementById('name').value;
+            const rollNumber = document.getElementById('roll').value;
+            const studentId = document.getElementById('student-id').value;
+            console.log('Form Data:', { name, rollNumber, studentId }); // Debugging log
+
+            // Create an object with student data
+            const studentData = { name, rollNumber, studentId, ...data };
+            console.log('Student Data:', studentData); // Debugging log
+
+            // Send data to the server
+            fetch('http://192.168.151.219:3001/api/student', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(studentData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data); // Debugging log
+                alert('Attendance recorded successfully!');
+                // Optionally redirect or reset the form
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
