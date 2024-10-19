@@ -34,7 +34,7 @@
         const roll = document.getElementById('roll').value;
 
         // Send attendance data to Express server
-        axios.post('http://your-express-server-url/api/attendance', { name, roll })
+        axios.post('https://server-xi-two-14.vercel.app/', { name, roll })
             .then(response => {
                 alert('Attendance submitted successfully!');
                 // Optionally redirect or clear the form here
